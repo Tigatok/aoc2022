@@ -1,78 +1,93 @@
-# if it starts with a $ its a command
-# if it starts with a dir its a directory
-# if it stars with a number its a file
-
-# A file has 3 parts, size, name and extension
-
-# There are 2 commands, ls and cd
-
-# ls lists all items within the current directory
-# ls has no arguments
-
-# cd changes the current directory into a new directory
-# cd has 3 arguments:
-#   - dirname - the directory name to change the current directory
-#   - .. - go back one directory
-#   - / - switch the current directory to the outer most directory
-
-
-
-# For every line, it is either a command or an output.
-# We need to track which directory we are in.
-
-# Determine the total size of each directory (and their directories...)
-
-# Find all directories with a total size of <= 100000
-
-# Initial thoughts are to just search for all instances of ls command. Thi is not reliable because a cd .. and then an ls won't tell us what we are in.
-
-# We know, currently, that we are going to need to know what directory we are in. We should solve for the logic of the CD command.
-
-# What we need to do is read all of the output for an LS and update a map with those.
-# So if the command is ls, set reading flag to true, and for every line, dont do normal logic until
-# the read command is false (another command is on the line.)
+from pathlib import Path
 def main():
     day7 = open("./day7.txt", "r")
     day7 = day7.read()
     solutionOne(day7)
 
 def solutionOne(input):
-    # Track previous in case we use ..
-    parentDirectories = []
-    currentDirectoryFiles = {}
-    currentDirectory = '/'
-    # Get input output lines.
-    io = input.split('\n');
-    for ioLine in io:
-        lineParts = ioLine.split(' ')
+    # This is the command lines.
+    consoleLines = input.split('\n')
 
-        # If the line starts with $ it's a command.
-        # We only care about the CD command, as ls provides nothing useful for us.
-        if lineParts[0] == '$':
-            # A command must be after a $.
+    # Init the map.
+    directoryFileMap = {
+    }
+    currentDirectory = '/'
+
+    count = 0
+    for consoleLine in consoleLines:
+        lineParts = consoleLine.split(' ')
+        # If the first part is numeric, its a file.
+        # We already know the directory we are in, so lets add it to the map.
+        if lineParts[0].isnumeric():
+            size = int(lineParts[0])
+            directoryFileMap[currentDirectory] += size 
+        elif lineParts[0] == '$':
             command = lineParts[1]
-            # Change directory command.
-            if command == 'cd':
-                # If we are to move to previous, set current to previous.
-                if lineParts[2] == '..':
-                    currentDirectory = parentDirectories.pop()
-                # If they change to /, there are no more parentDirectories.
-                elif lineParts[2] == '/':
-                    currentDirectory = '/'
-                    parentDirectories = []
+            # "Change the directory"
+            if (command == 'cd'):
+                # Either .. or an argument, both of which are directories.
+                newDirectory = lineParts[2]
+                # We need to go backwards.
+                if newDirectory == '..':
+                    count += 1
+                    oldDirectory = currentDirectory
+                    parentDirectory = str(Path(oldDirectory).parent)
+                    if parentDirectory == '.':
+                        parentDirectory = '/'
+                    currentDirectory = parentDirectory
                 else:
-                    parentDirectories.append(currentDirectory)
-                    currentDirectory = lineParts[2]
-                    # # Else it is an output.
-        # If its not a command, its an output from the ls.
-        else:
-            currentDirectoryFiles.update({'directory': currentDirectory, 'files': currentDirectoryFiles})
-    assert currentDirectory == 'd'
-    assert parentDirectories == ['/']
-    # totalSize = 0
-    # for currentDirectoryFile in currentDirectoryFiles:
-    #     totalSize = totalSize + int(currentDirectoryFile[0])
-    # assert totalSize == 24933642
+                    # If our current directory is root, our next directory must have the leading slash.
+                    if currentDirectory == '/':
+                        currentDirectory = f'/{newDirectory}'
+                    # No longer in the root directory, so our next directory....
+                    else:
+                        currentDirectory = f'/{currentDirectory}/{newDirectory}'
+                    # We need to do some dir cleaning...
+                    dirNames = []
+                    for currentDirectorySlash in currentDirectory.split('/'):
+                        if (currentDirectorySlash != ''):
+                            dirNames.append(currentDirectorySlash)
+                    cleanedDirNames = '/'.join(dirNames)
+                    currentDirectory = ''.join(('/', cleanedDirNames))
+                    # While we are traversing, the first time we see a cd with a 
+                    # directory we haven't been into yet, we will not have a record of it.
+                    if currentDirectory not in directoryFileMap:
+                        directoryFileMap[currentDirectory] = 0
+    # Now we have everything we need.
+    # We need to loop over everything.
+    # We loop once to get everything, we loop again to total
+    # all the items where the name matches.
+    for directoryName, size in directoryFileMap.items():
+        matchedDirectories = 0
+        totalSize = 0
+        for directoryNameCheck, sizeCheck in directoryFileMap.items():
+            if directoryNameCheck.startswith(directoryName):
+                matchedDirectories += 1
+                totalSize += int(sizeCheck)
+        if matchedDirectories > 1:
+            directoryFileMap[directoryName] = totalSize
+
+    totalSizeOne = 0
+    ts = 0
+    for directoryName, size in directoryFileMap.items():
+        ts += int(size)
+        if int(size) <= 100000:
+            totalSizeOne += int(size)
+    print(totalSizeOne)
+
+    diskSpaceAvailable = 70000000
+    neededSpace = 30000000
+    # 42805968
+    currentSpace = directoryFileMap['/']
+    # 27194032
+    currentUnusedSpace = diskSpaceAvailable - currentSpace
+    # 2805968
+    requiredSpace = neededSpace - currentUnusedSpace
+    eligibleDeletions = {}
+    for directoryName, size in directoryFileMap.items():
+        if int(size) >= requiredSpace:
+            eligibleDeletions[directoryName] = size
+    print(min(eligibleDeletions.values()))
 
 if __name__ == "__main__":
     main()
