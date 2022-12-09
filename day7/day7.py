@@ -13,7 +13,6 @@ def solutionOne(input):
     }
     currentDirectory = '/'
 
-    count = 0
     for consoleLine in consoleLines:
         lineParts = consoleLine.split(' ')
         # If the first part is numeric, its a file.
@@ -29,7 +28,6 @@ def solutionOne(input):
                 newDirectory = lineParts[2]
                 # We need to go backwards.
                 if newDirectory == '..':
-                    count += 1
                     oldDirectory = currentDirectory
                     parentDirectory = str(Path(oldDirectory).parent)
                     if parentDirectory == '.':
