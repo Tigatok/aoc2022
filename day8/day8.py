@@ -31,18 +31,67 @@ def solutionOne(input):
                 x != mapSize-1
             ):
                 tree = coordinates[x][y]
-                treeRight = coordinates[x][y+1]
-                treeLeft = coordinates[x][y-1]
-                treeUp = coordinates[x-1][y]
-                treeDown = coordinates[x+1][y]
-                if (
-                    tree >= treeUp and
-                    tree >= treeRight and
-                    tree >= treeDown and
-                    tree >= treeLeft
-                    ):
-                        print(coordinates[x][y])
-                        internalVisibleTrees += 1
+                print("Searching with tree", tree)
+                # Down and Right
+                count = 1
+                while count <= mapSize:
+                    xIndex = x+count
+                    yIndex = y+count
+                    treeIsVisible = False
+                    trackingVisible = False
+                    if xIndex < len(coordinates[x]):
+                        print("Tree in +X:", coordinates[x+count][y])
+                        checkTree = coordinates[x+count][y]
+                        # If there are no trees below up taller.
+                        if tree > checkTree:
+                            print(tree, checkTree)
+                            trackingVisible = True
+                        else:
+                            trackingVisible = False
+                    if yIndex < len(coordinates[y]):
+                        print("Tree in +Y:", coordinates[x][y+count])
+                        checkTree = coordinates[x][y+count]
+                        if tree > checkTree:
+                            print(tree, checkTree)
+                            treeIsVisible = True
+                        else:
+                            treeIsVisible = False
+                    xIndex = int(xIndex) * -1
+                    yIndex = int(yIndex) * -1
+                    if xIndex < len(coordinates[x]):
+                        print("Tree in -X:", coordinates[x-count][y])
+                        checkTree = coordinates[x-count][y]
+                        if tree > checkTree:
+                            print(tree, checkTree)
+                            treeIsVisible = True
+                        else:
+                            treeIsVisible = False
+                    if yIndex < len(coordinates[y]):
+                        print("Tree in -Y:", coordinates[x][y-count])
+                        checkTree = coordinates[x][y-count]
+                        if tree > checkTree:
+                            print(tree, checkTree)
+                            treeIsVisible = True
+                        else:
+                            treeIsVisible = False
+                    if treeIsVisible and trackingVisible:
+                        print("Tree", tree,"is visible:", treeIsVisible, '\n')
+                        internalVisibleTrees +=1
+                        break;
+                    count+=1
+
+                # treeUp = coordinates[x-1][y]
+                # treeRight = coordinates[x][y+1]
+                # treeLeft = coordinates[x][y-1]
+                # treeDown = coordinates[x+1][y]
+                # if (
+                #     tree >= treeUp and
+                #     tree >= treeRight and
+                #     tree >= treeDown and
+                #     tree >= treeLeft
+                #     ):
+                #         print(coordinates[x][y])
+                #         internalVisibleTrees += 1
     totalVisibleTrees = getPerimiterTrees(mapSize) + internalVisibleTrees
     print(totalVisibleTrees)
 
