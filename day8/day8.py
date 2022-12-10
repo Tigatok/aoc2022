@@ -1,5 +1,5 @@
 def main():
-    day8 = open("./day8.txt", "r")
+    day8 = open("./day8_2.txt", "r")
     day8 = day8.read()
     solutionOne(day8)
 
@@ -25,87 +25,115 @@ def solutionOne(input):
     internalVisibleTrees = 0
     for x in range(mapSize):
         for y in range(mapSize):
-            # We already have the perimiter amount.
-            # if (
-            #     x != 0 and
-            #     y != 0 and
-            #     y != mapSize-1 and
-            #     x != mapSize-1
-            # ):
             tree = int(coordinates[x][y])
             treesToSearch.append(tree)
             print("Searching with tree", tree)
-            count = 0
-            negCount = 0
-            treeIsVisible = False
             downTrees = []
             rightTrees = []
             upTrees = []
             leftTrees = []
-            while count <= mapSize:
-                count+=1
-                negCount -= 1
-                xIndex = x+count
-                yIndex = y+count
-                # if (
-                #     x != 0 and
-                #     y != 0 and
-                #     y != mapSize-1 and
-                #     x != mapSize-1
-                # ):
-                # Down
-                if xIndex < len(coordinates[x]):
-                    checkTree = int(coordinates[x+count][y])
-                    if (x == 1):
-                        downTrees.append(checkTree)
-                # Right
-                if yIndex < len(coordinates[y]):
-                    checkTree = int(coordinates[x][y+count])
-                    if (y == 1):
-                        rightTrees.append(checkTree)
-                # Up
-                if(x-count >= 0):
-                    checkTree = int(coordinates[x-count][y])
-                    if (y == mapSize-1):
-                        upTrees.append(checkTree)
-                # Left
-                if(y-count >= 0):
-                    checkTree = int(coordinates[x][y-count])
-                    if (y == mapSize-1):
-                        leftTrees.append(checkTree)
-
+            # Initialize to 1 so we don't count the tree we are looking around.
+            count = 1
+            # We know the tree we are looking at.
+            # Now, we need to get all other trees around that one.
+            while count < mapSize:
+                xCount = int(x) + count
+                yCount = int(y) + count
+                nXCount = int(x) - count
+                nYCount = int(y) - count
+                if (xCount) < len(coordinates[x]):
+                    # Increment right away or else we will be on the same tree...
+                    checkTree = int(coordinates[xCount][y])
+                    downTrees.append(checkTree)
+                if (yCount) < len(coordinates[y]):
+                    checkTree = int(coordinates[x][yCount])
+                    rightTrees.append(checkTree)
+                if (nXCount >= 0):
+                    checkTree = int(coordinates[nXCount][y])
+                    upTrees.append(checkTree)
+                if (nYCount >= 0):
+                    checkTree = int(coordinates[x][nYCount])
+                    leftTrees.append(checkTree)
+                count += 1
             print("Up", upTrees)
             print("Right", rightTrees)
             print("Down", downTrees)
             print("Left", leftTrees)
             treeIsVisible = False
-            for neighborTree in upTrees:
-                if tree > neighborTree:
-                    treeIsVisible = True
-                else:
-                    break
-            for neighborTree in rightTrees:
-                if tree > neighborTree:
-                    treeIsVisible = True
-                else:
-                    break
-            for neighborTree in downTrees:
-                if tree > neighborTree:
-                    treeIsVisible = True
-                else:
-                    break
-            for neighborTree in leftTrees:
-                if tree > neighborTree:
-                    treeIsVisible = True
-                else:
-                    break
-            if treeIsVisible:
-                print("Tree",tree,"is visible\n")
-                internalVisibleTrees += 1
+            if len(upTrees) == 0:
+                treeIsVisible = True
             else:
-                print()
-    totalVisibleTrees = getPerimiterTrees(mapSize) + internalVisibleTrees
+                for upTree in upTrees:
+                    print(tree, ">", upTree, tree>upTree)
+                    if tree > upTree:
+                        treeIsVisible = True
+                    else:
+                        break
+            # true
+
+            if len(rightTrees) == 0:
+                treeIsVisible = True
+            else:
+                for rightTree in rightTrees:
+                    print(tree, ">", rightTree, tree>rightTree)
+                    if tree > rightTree:
+                        treeIsVisible = True
+                    else:
+                        break
+
+            if len(downTrees) == 0:
+                treeIsVisible = True
+            else:
+                for downTree in downTrees:
+                    print(tree, ">", downTree, tree>downTree)
+                    if tree > downTree:
+                        treeIsVisible = True
+                    else:
+                        break
+
+            if len(leftTrees) == 0:
+                treeIsVisible = True
+            else:
+                for leftTree in leftTrees:
+                    print(tree, ">", leftTree, tree>leftTree)
+                    if tree > leftTree:
+                        treeIsVisible = True
+                    else:
+                        break
+            if treeIsVisible == True:
+                internalVisibleTrees += 1
+            print("Tree", tree,"is visible:", treeIsVisible)
+            print()
+               
+            # treeIsVisible = False
+            # for neighborTree in upTrees:
+            #     if tree > neighborTree:
+            #         treeIsVisible = True
+            #     else:
+            #         break
+            # for neighborTree in rightTrees:
+            #     if tree > neighborTree:
+            #         treeIsVisible = True
+            #     else:
+            #         break
+            # for neighborTree in downTrees:
+            #     if tree > neighborTree:
+            #         treeIsVisible = True
+            #     else:
+            #         break
+            # for neighborTree in leftTrees:
+            #     if tree > neighborTree:
+            #         treeIsVisible = True
+            #     else:
+            #         break
+            # if treeIsVisible:
+            #     print("Tree",tree,"is visible\n")
+            #     internalVisibleTrees += 1
+            # else:
+            #     print()
+    totalVisibleTrees =  internalVisibleTrees
     print(totalVisibleTrees)
+    assert totalVisibleTrees == 31
 
 
 # def isVisible(tree, coordinates):
