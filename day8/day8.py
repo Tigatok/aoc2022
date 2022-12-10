@@ -19,7 +19,6 @@ def solutionOne(input):
     # it's a perfect square.
     mapSize = len(coordinates)
     print("Map Size:", mapSize)
-    print("Perimiter Trees:", getPerimiterTrees(mapSize))
 
     treesToSearch = []
     internalVisibleTrees = 0
@@ -59,104 +58,66 @@ def solutionOne(input):
             print("Right", rightTrees)
             print("Down", downTrees)
             print("Left", leftTrees)
-            treeIsVisible = False
+
+            visibleFromUp = False
             if len(upTrees) == 0:
-                treeIsVisible = True
+                visibleFromUp = True
             else:
                 for upTree in upTrees:
                     print(tree, ">", upTree, tree>upTree)
                     if tree > upTree:
-                        treeIsVisible = True
+                        visibleFromUp = True
                     else:
+                        visibleFromUp = False
                         break
             # true
 
+            visibleFromRight = False
             if len(rightTrees) == 0:
-                treeIsVisible = True
+                visibleFromRight = True
             else:
                 for rightTree in rightTrees:
                     print(tree, ">", rightTree, tree>rightTree)
                     if tree > rightTree:
-                        treeIsVisible = True
+                        visibleFromRight = True
                     else:
+                        visibleFromRight = False
                         break
 
+            visibleFromDown = False
             if len(downTrees) == 0:
-                treeIsVisible = True
+                visibleFromDown = True
             else:
                 for downTree in downTrees:
                     print(tree, ">", downTree, tree>downTree)
                     if tree > downTree:
-                        treeIsVisible = True
+                        visibleFromDown = True
                     else:
+                        visibleFromDown = False
                         break
 
+            visibleFromLeft = False
             if len(leftTrees) == 0:
-                treeIsVisible = True
+                visibleFromLeft = True
             else:
                 for leftTree in leftTrees:
                     print(tree, ">", leftTree, tree>leftTree)
                     if tree > leftTree:
-                        treeIsVisible = True
+                        visibleFromLeft = True
                     else:
-                        break
+                        visibleFromLeft = False
+                        break;
+            treeIsVisible = False
+            if (visibleFromUp or visibleFromDown or visibleFromLeft or visibleFromRight):
+                treeIsVisible = True
             if treeIsVisible == True:
                 internalVisibleTrees += 1
+
             print("Tree", tree,"is visible:", treeIsVisible)
             print()
-               
-            # treeIsVisible = False
-            # for neighborTree in upTrees:
-            #     if tree > neighborTree:
-            #         treeIsVisible = True
-            #     else:
-            #         break
-            # for neighborTree in rightTrees:
-            #     if tree > neighborTree:
-            #         treeIsVisible = True
-            #     else:
-            #         break
-            # for neighborTree in downTrees:
-            #     if tree > neighborTree:
-            #         treeIsVisible = True
-            #     else:
-            #         break
-            # for neighborTree in leftTrees:
-            #     if tree > neighborTree:
-            #         treeIsVisible = True
-            #     else:
-            #         break
-            # if treeIsVisible:
-            #     print("Tree",tree,"is visible\n")
-            #     internalVisibleTrees += 1
-            # else:
-            #     print()
     totalVisibleTrees =  internalVisibleTrees
     print(totalVisibleTrees)
     assert totalVisibleTrees == 31
-
-
-# def isVisible(tree, coordinates):
-#     # I have the tree that I am searching for.
-#     return False
-
-# This should probably actually return the trees
-# that make up the permiter.. Some dict.
-def getPerimiterTrees(mapSize):
-    perimiterTrees = 0
-
-    # Loop over all the rows
-    for x in range(mapSize):
-        # Loop over all the columns
-        for y in range(mapSize):
-            if (
-                x == 0 or
-                y == 0 or
-                y == mapSize-1 or
-                x == mapSize-1
-            ):
-                perimiterTrees += 1
-    return int(perimiterTrees)
 
 if __name__ == "__main__":
     main()
