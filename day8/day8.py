@@ -1,5 +1,5 @@
 def main():
-    day8 = open("./day8_2.txt", "r")
+    day8 = open("./day8.txt", "r")
     day8 = day8.read()
     solutionOne(day8)
 
@@ -117,7 +117,6 @@ def solutionOne(input):
             print()
     totalVisibleTrees =  internalVisibleTrees
     print(totalVisibleTrees)
-    assert totalVisibleTrees == 31
 
 if __name__ == "__main__":
     main()
