@@ -29,14 +29,14 @@ def solution(inputFile):
     # Start at 0,0 arbitrarily
     headX = int(0)
     headY = int(0)
-    tailSize = 2
+    tailSize = 9
     tailPieces = {}
     # Need to use headPiece, not headX/Y, cause its throwing off.
     headPiece = {
         'x': 0,
         'y': 0
     }
-    board[headY+10][headX+10] = 'h'
+    # board[headY+10][headX+10] = 'h'
     for i in range(tailSize):
         tailPieces[i] = {
             'x': 0,
@@ -65,7 +65,7 @@ def solution(inputFile):
             headPiece['x'] = headX  
             headPiece['y'] = headY
             print()
-            print(f"Head is moving.\n Current X: {headX}, Current Y: {headY}")
+            print(f"Head is moving. Current X: {headX}, Current Y: {headY}")
             
             for tail, tailCoords in tailPieces.items():
                 # The tail is always going to be the next piece.
@@ -77,9 +77,12 @@ def solution(inputFile):
                 if tail != 0:
                     headX = tailPieces[tail-1]['x']
                     headY = tailPieces[tail-1]['y']
+                    print(f"Tail {tail} is not the first tail, so follow tail {tail-1}.")
+                    print(f"New \"Head\" X: {headX}, Y: {headY}")
                 else:
                     headX = headPiece['x']
                     headY = headPiece['y']
+                    motion = ''
                 # Head has moved adjacent but to a corner.
                 if headX != tailX and headY != tailY:
                     if (
@@ -88,52 +91,72 @@ def solution(inputFile):
                         headY >= tailY + 2 or
                         headY <= tailY - 2
                     ):
-                        # print()
-                        # print("Direction:", direction)
-                        # print("Head is now detached and diagonal")
-                        # print("HEAD XY", headX, headY)
-                        # print("TAIL XY", tailX, tailY)
-                        # print()
-                        for i in range(2):
-                            # Need to move up and over.
-                            if direction == 'U':
-                                if tailY > headY+1:
-                                    # print("Move up")
-                                    tailY -= 1
-                                else:
-                                    # print("Move over")
-                                    # Move tail right 1
-                                    if headX > tailX:
-                                        tailX += 1
-                                    # Move tail left 1
-                                    else:
-                                        tailX -= 1
-                            elif direction == 'D':
-                                if tailY < headY-1:
-                                    tailY += 1
-                                else:
-                                    if headX > tailX:
-                                        tailX += 1
-                                    else:
-                                        tailX -= 1
-                            elif direction == 'R':
-                                if tailX < headX-1:
-                                    tailX += 1
-                                else:
-                                    if tailY > headY:
+                        print("DIAGONAL. diraction: ", direction)
+                        print("TailX", tailX, "TailY", tailY)
+                        print("HeadX", headX, "HeadY", headY)
+                        if motion != '':
+                            print("Motion set, follow...")
+                            if motion == 'UR':
+                                tailY -= 1
+                                tailX += 1
+                            elif motion == 'DR':
+                                tailY += 1
+                                tailX += 1
+                            elif motion == 'UL':
+                                tailY -= 1
+                                tailX -= 1
+                            elif motion == 'DL':
+                                tailY += 1
+                                tailX -=1
+                        else:
+                            for i in range(2):
+                                # Need to move up and over.
+                                if direction == 'U':
+                                    print(f"IF {tailY} > {headY+1}")
+                                    if tailY > headY+1:
+                                        # print("Move up")
                                         tailY -= 1
                                     else:
+                                        # print("Move over")
+                                        # Move tail right 1
+                                        if headX > tailX:
+                                            motion = 'UR'
+                                            tailX += 1
+                                        # Move tail left 1
+                                        else:
+                                            motion = 'UL'
+                                            tailX -= 1
+                                elif direction == 'D':
+                                    if tailY < headY-1:
                                         tailY += 1
-                            elif direction == 'L':
-                                # print("Move left 1, up/down 1")
-                                if tailX > headX + 1:
-                                    tailX -= 1
-                                else:
-                                    if tailY > headY:
-                                        tailY -= 1
                                     else:
-                                        tailY += 1
-
+                                        if headX > tailX:
+                                            motion = 'DR'
+                                            tailX += 1
+                                        else:
+                                            motion = 'DL'
+                                            tailX -= 1
+                                elif direction == 'R':
+                                    if tailX < headX-1:
+                                        tailX += 1
+                                    else:
+                                        if tailY > headY:
+                                            motion = 'UR'
+                                            tailY -= 1
+                                        else:
+                                            motion = 'DR'
+                                            tailY += 1
+                                elif direction == 'L':
+                                    # print("Move left 1, up/down 1")
+                                    if tailX > headX + 1:
+                                        tailX -= 1
+                                    else:
+                                        if tailY > headY:
+                                            motion = 'UL'
+                                            tailY -= 1
+                                        else:
+                                            motion = 'DL'
+                                            tailY += 1
                             # Update dict.
                             tailPieces[tail]['x'] = tailX
                             tailPieces[tail]['y'] = tailY
@@ -151,14 +174,15 @@ def solution(inputFile):
                         tailY -= 1
                 tailPieces[tail]['x'] = tailX
                 tailPieces[tail]['y'] = tailY                   
-                print(f"Tail {tail} is moving.\n Current X: {tailX}, Current Y: {tailY}")
-                visitedTailSpaces.append({'x': tailPieces[tail]['x'], 'y': tailPieces[tail]['y']})
+                print(f"Tail {tail} moved. Current X: {tailX}, Current Y: {tailY}")
+                if (tail == 8):
+                    visitedTailSpaces.append({'x': tailPieces[tail]['x'], 'y': tailPieces[tail]['y']})
                 # print("Head location: ", headX, headY)
                 # print("Tail location: ", tailPieces[tail]['x'], tailPieces[tail]['y'])
                 # if tail == len(tailPieces)-1:
 
-                board[headY+10][headX+10] = 'h'
-                board[tailY+10][tailX+10] = f'{tail}'
+                # board[headY+10][headX+10] = 'h'
+                # board[tailY+10][tailX+10] = f'{tail}'
             # for row in board:
             #     print(row)
 
