@@ -82,7 +82,6 @@ def solution(inputFile):
                 else:
                     headX = headPiece['x']
                     headY = headPiece['y']
-                    motion = ''
                 # Head has moved adjacent but to a corner.
                 if headX != tailX and headY != tailY:
                     if (
@@ -94,72 +93,72 @@ def solution(inputFile):
                         print("DIAGONAL. diraction: ", direction)
                         print("TailX", tailX, "TailY", tailY)
                         print("HeadX", headX, "HeadY", headY)
-                        if motion != '':
-                            print("Motion set, follow...")
-                            if motion == 'UR':
-                                tailY -= 1
+                        # HeadY < means it is taller/higher
+                        if headY < tailY:
+                            tailY -= 1
+                            if headX > tailX:
                                 tailX += 1
-                            elif motion == 'DR':
-                                tailY += 1
-                                tailX += 1
-                            elif motion == 'UL':
-                                tailY -= 1
+                            if headX < tailX:
                                 tailX -= 1
-                            elif motion == 'DL':
-                                tailY += 1
-                                tailX -=1
-                        else:
-                            for i in range(2):
-                                # Need to move up and over.
-                                if direction == 'U':
-                                    print(f"IF {tailY} > {headY+1}")
-                                    if tailY > headY+1:
-                                        # print("Move up")
-                                        tailY -= 1
-                                    else:
-                                        # print("Move over")
-                                        # Move tail right 1
-                                        if headX > tailX:
-                                            motion = 'UR'
-                                            tailX += 1
-                                        # Move tail left 1
-                                        else:
-                                            motion = 'UL'
-                                            tailX -= 1
-                                elif direction == 'D':
-                                    if tailY < headY-1:
-                                        tailY += 1
-                                    else:
-                                        if headX > tailX:
-                                            motion = 'DR'
-                                            tailX += 1
-                                        else:
-                                            motion = 'DL'
-                                            tailX -= 1
-                                elif direction == 'R':
-                                    if tailX < headX-1:
-                                        tailX += 1
-                                    else:
-                                        if tailY > headY:
-                                            motion = 'UR'
-                                            tailY -= 1
-                                        else:
-                                            motion = 'DR'
-                                            tailY += 1
-                                elif direction == 'L':
-                                    # print("Move left 1, up/down 1")
-                                    if tailX > headX + 1:
-                                        tailX -= 1
-                                    else:
-                                        if tailY > headY:
-                                            motion = 'UL'
-                                            tailY -= 1
-                                        else:
-                                            motion = 'DL'
-                                            tailY += 1
-                            # Update dict.
-                            tailPieces[tail]['x'] = tailX
-                            tailPieces[tail]['y'] = tailY
+                        if headY > tailY:
+                            tailY += 1
+                            if headX > tailX:
+                                tailX += 1
+                            if headX < tailX:
+                                tailX -= 1
+
+                        # for i in range(2):
+                        #     # Need to move up and over.
+                        #     # if direction == 'U':
+                        #     print(f"IF {tailY} > {headY+1}")
+                        #     if headY +1 <= tailY:
+                        #     # if tailY > headY+1:
+                        #         # print("Move up")
+                        #         tailY -= 1
+                        #     else:
+                        #         # print("Move over")
+                        #         # Move tail right 1
+                        #         if headX > tailX:
+                        #             motion = 'UR'
+                        #             tailX += 1
+                        #         # Move tail left 1
+                        #         else:
+                        #             motion = 'UL'
+                        #             tailX -= 1
+                        # # elif direction == 'D':
+                        #     if tailY < headY-1:
+                        #         tailY += 1
+                        #     else:
+                        #         if headX > tailX:
+                        #             motion = 'DR'
+                        #             tailX += 1
+                        #         else:
+                        #             motion = 'DL'
+                        #             tailX -= 1
+                        # # elif direction == 'R':
+                        #     if tailX < headX-1:
+                        #         tailX += 1
+                        #     else:
+                        #         if tailY > headY:
+                        #             motion = 'UR'
+                        #             tailY -= 1
+                        #         else:
+                        #             motion = 'DR'
+                        #             tailY += 1
+                        # # elif direction == 'L':
+                        #     # print("Move left 1, up/down 1")
+                        #     if tailX > headX + 1:
+                        #         tailX -= 1
+                        #     else:
+                        #         if tailY > headY:
+                        #             motion = 'UL'
+                        #             tailY -= 1
+                        #         else:
+                        #             motion = 'DL'
+                        #             tailY += 1
+                        # Update dict.
+                        tailPieces[tail]['x'] = tailX
+                        tailPieces[tail]['y'] = tailY
                 else:    
                     # print("TAA", tailX, tailY)
                      # Now that the head has moved, need to determine if the tail should move.
