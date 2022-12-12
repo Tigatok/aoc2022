@@ -1,5 +1,5 @@
 def main():
-    inputFile = open("./input.txt", "r")
+    inputFile = open("./input_e.txt", "r")
     inputFile = inputFile.read()
     solution(inputFile)
 
@@ -95,6 +95,7 @@ def solution(inputFile):
             uniqueTailSteps.append(visitedSpace)
     print("Visited tail spaces", len(visitedTailSpaces))
     print("Unique tail spaces", len(uniqueTailSteps))
+    print("Unique tail spaces", uniqueTailSteps)
         
     # assert headX == 2
     # assert headY == -2

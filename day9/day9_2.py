@@ -29,13 +29,14 @@ def solution(inputFile):
     # Start at 0,0 arbitrarily
     headX = int(0)
     headY = int(0)
-    tailSize = 1
+    tailSize = 2
     tailPieces = {}
     # Need to use headPiece, not headX/Y, cause its throwing off.
     headPiece = {
         'x': 0,
         'y': 0
     }
+    board[headY+10][headX+10] = 'h'
     for i in range(tailSize):
         tailPieces[i] = {
             'x': 0,
@@ -46,6 +47,7 @@ def solution(inputFile):
     for direction, amountOfSteps in directionParts:
         # This loops over the step amount.
         for step in range(int(amountOfSteps)):
+            # board[headY+10][headX+10] = '.'
             headX = headPiece['x']
             headY = headPiece['y']
 
@@ -62,6 +64,8 @@ def solution(inputFile):
                 headY += 1
             headPiece['x'] = headX  
             headPiece['y'] = headY
+            print()
+            print(f"Head is moving.\n Current X: {headX}, Current Y: {headY}")
             
             for tail, tailCoords in tailPieces.items():
                 # The tail is always going to be the next piece.
@@ -73,11 +77,9 @@ def solution(inputFile):
                 if tail != 0:
                     headX = tailPieces[tail-1]['x']
                     headY = tailPieces[tail-1]['y']
-                    print(f"tail {tail} xy", headX, headY)
                 else:
                     headX = headPiece['x']
                     headY = headPiece['y']
-                    print(f"tail {tail} xy", headX, headY)
                 # Head has moved adjacent but to a corner.
                 if headX != tailX and headY != tailY:
                     if (
@@ -149,14 +151,17 @@ def solution(inputFile):
                         tailY -= 1
                 tailPieces[tail]['x'] = tailX
                 tailPieces[tail]['y'] = tailY                   
+                print(f"Tail {tail} is moving.\n Current X: {tailX}, Current Y: {tailY}")
                 visitedTailSpaces.append({'x': tailPieces[tail]['x'], 'y': tailPieces[tail]['y']})
                 # print("Head location: ", headX, headY)
                 # print("Tail location: ", tailPieces[tail]['x'], tailPieces[tail]['y'])
                 # if tail == len(tailPieces)-1:
 
                 board[headY+10][headX+10] = 'h'
-            for row in board:
-                print(row)
+                board[tailY+10][tailX+10] = f'{tail}'
+            # for row in board:
+            #     print(row)
+
     uniqueTailSteps = []
     for visitedSpace in visitedTailSpaces:
         if visitedSpace not in uniqueTailSteps:
