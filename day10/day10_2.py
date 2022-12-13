@@ -29,16 +29,17 @@ def solution(inputFile):
                 'x': x,
                 'in': amount
             })
-    sum = 0
-    sum += cycles[19]['x'] * 20
-    sum += cycles[59]['x'] * 60
-    sum += cycles[99]['x'] * 100
-    sum += cycles[139]['x'] * 140
-    sum += cycles[179]['x'] * 180
-    sum += cycles[219]['x'] * 220
-    print(sum)
 
-    for cycle in range(len(cycles)):
-        print(f'cycle {cycle} is {cycles[cycle]}')
+    # Would be 0, but x = 1.
+    spritePosition = 1
+    rows = []
+    rowString = ''
+    for i in range(len(cycles)):
+        print(cycles[i])
+        if i > 0 and i % 40 == 0:
+            rows.append(rowString)
+            rowString = ''
+        rowString += '.'
+    print (rows)
 if __name__ == "__main__":
     main()
