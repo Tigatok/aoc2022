@@ -8,24 +8,40 @@ def main():
     solution(inputFile)
 
 def solution(inputFile):
-    monkey0 = Monkey(0, [79,98], 'old * 19', 23, [2,3])
-    monkey1 = Monkey(1, [54,65,75,74], 'old + 6', 19, [2,0])
-    monkey2 = Monkey(2, [79, 60, 97], 'old * old', 13, [1,3])
-    monkey3 = Monkey(3, [74], 'old + 3', 17, [0,1])
+    monkey0 = Monkey(0, [57,58], 'old * 19', 7, [2,3])
+    monkey1 = Monkey(1, [66,52,59,79,94,73], 'old + 1', 19, [4,6])
+    monkey2 = Monkey(2, [80], 'old + 6', 5, [7,5])
+    monkey3 = Monkey(3, [82,81,68,66,71,83,75,97], 'old + 5', 11, [5,2])
+    monkey4 = Monkey(4, [55,52,67,70,69,94,90], 'old * old', 17, [0,3])
+    monkey5 = Monkey(5, [69,85,89,91], 'old + 7', 13, [1,7])
+    monkey6 = Monkey(6, [75,53,73,52,75], 'old * 7', 2, [0,4])
+    monkey7 = Monkey(7, [94,60,79], 'old + 2', 3, [1,6])
     monkeys.append(monkey0)
     monkeys.append(monkey1)
     monkeys.append(monkey2)
     monkeys.append(monkey3)
+    monkeys.append(monkey4)
+    monkeys.append(monkey5)
+    monkeys.append(monkey6)
+    monkeys.append(monkey7)
     
-    for monkey in monkeys:
-        monkey.inspectItems()
-        newMonkeys = monkey.testItems()
-        for newMonkey in newMonkeys:
-            monkeys[newMonkey['id']].startingItems.append(newMonkey['itemId'])
+    for i in range(20):
+        for monkey in monkeys:
+            monkey.inspectItems()
+            newMonkeys = monkey.testItems()
+            for newMonkey in newMonkeys:
+                monkeys[newMonkey['id']].startingItems.append(newMonkey['itemId'])
     
+    topMonkeys = []
     for monkey in monkeys:
-        print("Monkey", monkey.id, "has", monkey.getItems())
+        print("Monkey", monkey.id, "has", monkey.getItems(), "has inspected", monkey.getInspectedItemCount())
+        topMonkeys.append(monkey.getInspectedItemCount())
         print()
+    topMonkeys.sort()
+    print(topMonkeys)
+    top1 = topMonkeys.pop()
+    top2 = topMonkeys.pop()
+    print(top1*top2)
     # monkey0.inspectItems()
     # newMonkeys = monkey0.testItems()
     # print(newMonkeys)
@@ -50,10 +66,15 @@ class Monkey:
         self.operation = operation
         self.test = test
         self.conditions = conditions
+        self.inspectedItemCount = 0
     
+    
+    def getInspectedItemCount(self):
+        return self.inspectedItemCount
     
     def inspectItems(self):
         for item in range(len(self.startingItems)):
+            self.inspectedItemCount += 1
             newWorryLevel = self.inspectItem(self.startingItems[item], self.operation)
             print("New Worry Level:", newWorryLevel)
 
