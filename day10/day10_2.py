@@ -30,16 +30,38 @@ def solution(inputFile):
                 'in': amount
             })
 
+    
+
     # Would be 0, but x = 1.
     spritePosition = 1
-    rows = []
+    pixels = []
+    rows =[]
     rowString = ''
+    sprite = {
+        'position': 1
+    }
+    spriteImage = '###'
+    
+    pixel = '.'
+    # Cycles is 240 items.
+    # Every 40 items, we want to break a new row.
     for i in range(len(cycles)):
-        print(cycles[i])
+        x = cycles[i]['x']
+        # Break every 40 rows.
         if i > 0 and i % 40 == 0:
             rows.append(rowString)
             rowString = ''
-        rowString += '.'
-    print (rows)
+        # Default the pixel to '.'
+        pixel = '.'
+        # print(cycles[i])
+        print(i)
+        # This is debugging...
+        if i == sprite['position'] or i == sprite['position']-1 or i == sprite['position'] + 1:
+            pixel = '#'
+        rowString += pixel
+        sprite['position'] = x
+    for row in rows:
+        print(row)
+
 if __name__ == "__main__":
     main()
