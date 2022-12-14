@@ -93,6 +93,7 @@ class Monkey:
                 newMonkey['id'] = self.conditions[1]
             newMonkey['itemId'] = item 
             newMonkeys.append(newMonkey)
+        self.startingItems = []
         return newMonkeys
 
 
